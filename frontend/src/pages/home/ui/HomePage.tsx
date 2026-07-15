@@ -201,7 +201,7 @@ export function HomePage({ onNavigateToChecklist }: HomePageProps) {
 
               {nextVisit.tags && (
                 <div className="flex gap-2 mt-5 relative z-10">
-                  {nextVisit.tags.map((tag, idx) => (
+                  {nextVisit.tags.map((tag: string, idx: number) => (
                     <span key={idx} className="bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-[13px] font-medium text-white/95">
                       {tag}
                     </span>
