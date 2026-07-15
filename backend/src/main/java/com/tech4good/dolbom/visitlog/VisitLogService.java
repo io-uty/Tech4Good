@@ -50,7 +50,8 @@ public class VisitLogService {
 				.workerId(workerId)
 				.visitDateTime(createdAt)
 				.createdAt(createdAt)
-				// rawText 자체는 저장하지 않음 (명세 요구사항)
+				// STT 원문은 검수 및 재처리를 위해 함께 저장
+				.rawSttText(rawText)
 				.body(nullToEmpty(summary.getBody()))
 				.food(nullToEmpty(summary.getFood()))
 				.emotion(nullToEmpty(summary.getEmotion()))

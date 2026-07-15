@@ -69,8 +69,8 @@ class HandoverCardE2ETest {
 			}
 			break;
 		}
-		Assumptions.assumeTrue(hasKey("ANTHROPIC_API_KEY") && hasKey("FIREBASE_CREDENTIALS_PATH"),
-				"backend/.env에 ANTHROPIC_API_KEY / FIREBASE_CREDENTIALS_PATH가 없어 E2E 테스트를 건너뜁니다.");
+		Assumptions.assumeTrue((hasKey("ANTHROPIC_API_KEY") || hasKey("GOOGLE_API_KEY")) && hasKey("FIREBASE_CREDENTIALS_PATH"),
+				"backend/.env에 LLM 키(ANTHROPIC_API_KEY 또는 GOOGLE_API_KEY) / FIREBASE_CREDENTIALS_PATH가 없어 E2E 테스트를 건너뜁니다.");
 	}
 
 	private static boolean hasKey(String key) {

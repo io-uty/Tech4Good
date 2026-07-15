@@ -22,6 +22,9 @@ dependencies {
 	implementation 'org.springframework.boot:spring-boot-starter-webmvc'
 	implementation 'com.google.firebase:firebase-admin:9.4.3'
 	implementation 'com.anthropic:anthropic-java:2.34.0'
+	// Gemini 경로에서 응답 클래스 -> JSON 스키마 생성용
+	implementation 'com.github.victools:jsonschema-generator:4.37.0'
+	implementation 'com.github.victools:jsonschema-module-jackson:4.37.0'
 	compileOnly 'org.projectlombok:lombok'
 	annotationProcessor 'org.projectlombok:lombok'
 	testImplementation 'org.springframework.boot:spring-boot-starter-validation-test'

@@ -1,4 +1,4 @@
-# 돌봄ON Backend (Spring Boot)
+# 케어EZ Backend (Spring Boot)
 
 기능3 인수인계 카드 + 공통 ClaudeService 구현체. 전체 명세는 레포 루트 `CLAUDE.md` 참고.
 

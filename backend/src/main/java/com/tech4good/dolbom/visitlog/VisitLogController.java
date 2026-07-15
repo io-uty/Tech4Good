@@ -9,8 +9,8 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 
 import com.tech4good.dolbom.common.ApiExceptions.BadRequestException;
-import com.tech4good.dolbom.common.stt.SttService;
 import com.tech4good.dolbom.domain.VisitLog;
+import com.tech4good.dolbom.stt.ClovaSpeechService;
 
 import lombok.RequiredArgsConstructor;
 
@@ -19,7 +19,7 @@ import lombok.RequiredArgsConstructor;
 @RequiredArgsConstructor
 public class VisitLogController {
 
-	private final SttService sttService;
+	private final ClovaSpeechService clovaSpeechService;
 	private final VisitLogService visitLogService;
 
 	public record SttResponse(String rawText) {
@@ -51,7 +51,7 @@ public class VisitLogController {
 		} catch (IOException e) {
 			throw new BadRequestException("audioFile을 읽을 수 없습니다: " + e.getMessage());
 		}
-		String rawText = sttService.transcribe(bytes, audioFile.getContentType());
+		String rawText = clovaSpeechService.transcribe(bytes, audioFile.getOriginalFilename());
 		return new SttResponse(rawText);
 	}
 
