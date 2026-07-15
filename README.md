@@ -212,7 +212,3 @@ cd backend
 - **버전 보존**: 인수인계 카드는 재생성 시 이전 버전을 삭제하지 않고 `previousVersionId`로 연결해 이력을 보존합니다.
 - **접근 제어**: SW는 자신에게 배정된 어르신 문서만 read/write, ADMIN은 소속 기관 전체를 read하며 write는 확정(confirm) 액션에 한정합니다.
 - **민감정보 보호**: `elders`, `handoverCards` 등 건강·정서 정보를 포함하는 컬렉션은 접근 로그를 별도로 기록하고, 음성 원본은 STT 완료 후 삭제(설정 가능)합니다.
-
----
-
-더 자세한 기능별 스펙(프롬프트 설계 원칙, 완료 기준 등)은 [`CLAUDE.md`](./CLAUDE.md)에, 백엔드 세부 실행 가이드는 [`backend/README.md`](./backend/README.md)에 정리되어 있습니다.
