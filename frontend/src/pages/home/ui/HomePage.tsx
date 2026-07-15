@@ -75,7 +75,7 @@ export function HomePage({ onNavigateToChecklist }: HomePageProps) {
       {/* Greeting */}
       <div className="px-5 mb-3 mt-1 shrink-0">
         <h1 className="text-[20px] font-bold text-[#2B2E28]">안녕하세요 박복자님,</h1>
-        <p className="text-[14px] text-[#6E756A] mt-0.5">오늘도 활기찬 하루 보내세요!</p>
+        <p className="text-[14px] text-[#4A5046] mt-0.5">오늘도 활기찬 하루 보내세요!</p>
       </div>
 
       {/* Content */}
@@ -110,12 +110,12 @@ export function HomePage({ onNavigateToChecklist }: HomePageProps) {
         {/* Visit Schedule List */}
         <div>
           <div className="flex items-center justify-between mb-3 px-1">
-            <h2 className="text-[17px] font-bold text-[#2B2E28] flex items-center gap-2">
+            <h1 className="text-[17px] font-bold text-[#2B2E28] flex items-center gap-2">
               <div className="w-8 h-8 rounded-full bg-[#E3EEE7] flex items-center justify-center text-[#89BAB1]">
                 <Clock size={16} />
               </div>
               {isTodaySelected ? "오늘의 방문 일정" : `${selectedDateObj?.date}일의 방문 일정`}
-            </h2>
+            </h1>
           </div>
           <section className="bg-white rounded-xl p-5 shadow-sm border border-[#EBE8E0]">
             <div className="flex flex-col">

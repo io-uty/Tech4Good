@@ -74,7 +74,7 @@ export function VoiceLogPage({ onSubmit }: { onSubmit: () => void }) {
         <div className="w-10 h-10 border-4 border-[#E3EEE7] border-t-[#89BAB1] rounded-full animate-spin mb-4"></div>
         <h3 className="text-[17px] font-bold text-[#2B2E28]">{message}</h3>
         {timeMsg && (
-          <div className="flex items-center gap-1.5 text-[#6E756A] font-medium mt-2 bg-[#F0ECE1]/50 px-3 py-1 rounded-full text-[13px]">
+          <div className="flex items-center gap-1.5 text-[#4A5046] font-medium mt-2 bg-[#F0ECE1]/50 px-3 py-1 rounded-full text-[13px]">
             <Clock size={14} /> {timeMsg}
           </div>
         )}
@@ -99,7 +99,7 @@ export function VoiceLogPage({ onSubmit }: { onSubmit: () => void }) {
       </header>
 
       <div className="px-5 mb-6 shrink-0 w-full">
-        <p className="text-[15px] text-[#6E756A] m-0">작성하신 내용을 AI가 정리해 드려요</p>
+        <p className="text-[15px] text-[#4A5046] m-0">작성하신 내용을 AI가 정리해 드려요</p>
       </div>
 
       <div className="flex flex-col flex-1 relative h-full w-full">
@@ -152,7 +152,7 @@ export function VoiceLogPage({ onSubmit }: { onSubmit: () => void }) {
                   {recordState === "idle" ? <Mic size={64} /> : <Square size={40} fill="currentColor" />}
                 </button>
                 {recordState === "idle" && (
-                  <p className="text-[#6E756A] mt-6 font-medium text-[16px]">마이크를 눌러 기록을 시작하세요</p>
+                  <p className="text-[#4A5046] mt-6 font-medium text-[16px]">마이크를 눌러 기록을 시작하세요</p>
                 )}
               </div>
             )}
@@ -173,7 +173,7 @@ export function VoiceLogPage({ onSubmit }: { onSubmit: () => void }) {
             )}
 
             <div className="flex flex-col flex-1">
-              <h3 className="text-[14px] font-bold text-[#6E756A] mb-2 flex items-center gap-1.5 ml-1">
+              <h3 className="text-[14px] font-bold text-[#4A5046] mb-2 flex items-center gap-1.5 ml-1">
                 <Edit2 size={16} /> 직접 타이핑하기
               </h3>
               <textarea
@@ -211,7 +211,7 @@ export function VoiceLogPage({ onSubmit }: { onSubmit: () => void }) {
                     <c.icon size={22} />
                   </div>
                   <div className="flex-1 mt-0.5">
-                    <div className="text-[13.5px] text-[#6E756A] mb-1 font-bold">{c.label}</div>
+                    <div className="text-[13.5px] text-[#4A5046] mb-1 font-bold">{c.label}</div>
                     <div className="text-[16px] leading-relaxed text-[#2B2E28] font-medium tracking-tight">{c.text}</div>
                   </div>
                 </div>
@@ -220,7 +220,7 @@ export function VoiceLogPage({ onSubmit }: { onSubmit: () => void }) {
 
             <div className="flex gap-3 mt-auto pt-2 pb-6 mb-2 shrink-0 px-5">
               <button
-                className="bg-white text-[#6E756A] border border-[#E7E2D3] rounded-2xl p-4 text-[16px] font-bold cursor-pointer flex-1 flex items-center justify-center shadow-sm hover:bg-[#F9F8F5] transition-colors"
+                className="bg-white text-[#4A5046] border border-[#E7E2D3] rounded-2xl p-4 text-[16px] font-bold cursor-pointer flex-1 flex items-center justify-center shadow-sm hover:bg-[#F9F8F5] transition-colors"
                 onClick={handleReset}
               >
                 다시 작성

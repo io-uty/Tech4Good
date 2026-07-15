@@ -51,7 +51,7 @@ export function LinkedServices({ elderName, services, onBack }: LinkedServicesPr
         ))}
 
         {services.length === 0 && (
-          <div className="bg-white rounded-xl p-8 text-center text-[#6E756A] shadow-sm border border-[#E7E2D3]">
+          <div className="bg-white rounded-xl p-8 text-center text-[#4A5046] shadow-sm border border-[#E7E2D3]">
             현재 받고 계신 연계 서비스가 없습니다.
           </div>
         )}

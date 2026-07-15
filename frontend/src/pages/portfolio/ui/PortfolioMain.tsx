@@ -39,7 +39,7 @@ export function PortfolioMain({ data, onDownload }: PortfolioMainProps) {
     <div className="flex-1 overflow-y-auto bg-[#F7F5F0] pb-8 relative">
       {/* Header */}
       <header className="flex justify-between items-center p-5 pt-6 sticky top-0 bg-[#F7F5F0]/90 backdrop-blur-sm z-50">
-        <div className="text-[22px] font-extrabold text-[#89BAB1] tracking-tight">포트폴리오</div>
+        <div className="text-[22px] font-extrabold text-black tracking-tight">포트폴리오</div>
       </header>
 
       {/* 0. 프로필 카드 섹션 */}
@@ -77,28 +77,28 @@ export function PortfolioMain({ data, onDownload }: PortfolioMainProps) {
           <div className="w-10 h-10 rounded-full bg-[#E3F2ED] text-[#89BAB1] flex items-center justify-center mb-2">
             <User size={20} />
           </div>
-          <div className="text-[12px] text-[#6E756A] font-medium">총 방문 수</div>
+          <div className="text-[12px] text-[#4A5046] font-medium">총 방문 수</div>
           <div className="text-[20px] font-bold text-[#2B2E28]">{data.stats.totalCheckins.toLocaleString()}회</div>
         </div>
         <div className="bg-white rounded-xl p-4 shadow-sm border border-[#EBE8E0] flex flex-col items-center justify-center">
           <div className="w-10 h-10 rounded-full bg-[#FFF3E0] text-[#E68A00] flex items-center justify-center mb-2">
             <Clock size={20} />
           </div>
-          <div className="text-[12px] text-[#6E756A] font-medium">총 돌봄 시간</div>
+          <div className="text-[12px] text-[#4A5046] font-medium">총 돌봄 시간</div>
           <div className="text-[20px] font-bold text-[#2B2E28]">{data.stats.totalHours.toLocaleString()}시간</div>
         </div>
         <div className="bg-white rounded-xl p-4 shadow-sm border border-[#EBE8E0] flex flex-col items-center justify-center">
           <div className="w-10 h-10 rounded-full bg-[#E8F5E9] text-[#4CAF50] flex items-center justify-center mb-2">
             <Users size={20} />
           </div>
-          <div className="text-[12px] text-[#6E756A] font-medium">담당 어르신</div>
+          <div className="text-[12px] text-[#4A5046] font-medium">담당 어르신</div>
           <div className="text-[20px] font-bold text-[#2B2E28]">{data.stats.elderCount}명</div>
         </div>
         <div className="bg-white rounded-xl p-4 shadow-sm border border-[#EBE8E0] flex flex-col items-center justify-center">
           <div className="w-10 h-10 rounded-full bg-[#E3F2FD] text-[#2196F3] flex items-center justify-center mb-2">
             <CalendarCheck size={20} />
           </div>
-          <div className="text-[12px] text-[#6E756A] font-medium">출근율</div>
+          <div className="text-[12px] text-[#4A5046] font-medium">출근율</div>
           <div className="text-[20px] font-bold text-[#2B2E28]">{data.stats.attendanceRate}%</div>
         </div>
       </div>
@@ -130,25 +130,25 @@ export function PortfolioMain({ data, onDownload }: PortfolioMainProps) {
               </ResponsiveContainer>
               <div className="absolute inset-0 flex flex-col items-center justify-center pointer-events-none">
                 <span className="text-[24px] font-bold text-[#2B2E28]">{data.stats.attendanceRate}%</span>
-                <span className="text-[11px] text-[#6E756A]">출근율</span>
+                <span className="text-[11px] text-[#4A5046] font-bold">출근율</span>
               </div>
             </div>
 
             <div className="flex-1 grid grid-cols-2 gap-y-3 pl-4">
               <div>
-                <div className="text-[11px] text-[#6E756A] mb-0.5 flex items-center gap-1"><CalendarCheck size={12} className="text-[#89BAB1]" /> 총 근무일</div>
+                <div className="text-[11px] font-bold text-[#4A5046] mb-0.5 flex items-center gap-1"><CalendarCheck size={12} className="text-[#89BAB1]" /> 총 근무일</div>
                 <div className="text-[15px] font-bold text-[#2B2E28]">{data.attendanceStats.totalWorkDays}일</div>
               </div>
               <div>
-                <div className="text-[11px] text-[#6E756A] mb-0.5 flex items-center gap-1"><span className="text-[#E53935] text-[12px]">✕</span> 결근</div>
+                <div className="text-[11px] font-bold text-[#4A5046] mb-0.5 flex items-center gap-1"><span className="text-[#E53935] text-[12px]">✕</span> 결근</div>
                 <div className="text-[15px] font-bold text-[#2B2E28]">{data.attendanceStats.absence}일</div>
               </div>
               <div>
-                <div className="text-[11px] text-[#6E756A] mb-0.5 flex items-center gap-1"><Clock size={12} className="text-[#E68A00]" /> 지각</div>
+                <div className="text-[11px] font-bold text-[#4A5046] mb-0.5 flex items-center gap-1"><Clock size={12} className="text-[#E68A00]" /> 지각</div>
                 <div className="text-[15px] font-bold text-[#2B2E28]">{data.attendanceStats.late}회</div>
               </div>
               <div>
-                <div className="text-[11px] text-[#6E756A] mb-0.5 flex items-center gap-1"><BadgeCheck size={12} className="text-[#89BAB1]" /> 일지 완료율</div>
+                <div className="text-[11px] font-bold text-[#4A5046] mb-0.5 flex items-center gap-1"><BadgeCheck size={12} className="text-[#89BAB1]" /> 일지 완료율</div>
                 <div className="text-[15px] font-bold text-[#2B2E28]">{data.attendanceStats.logCompletionRate}%</div>
               </div>
             </div>
@@ -166,7 +166,7 @@ export function PortfolioMain({ data, onDownload }: PortfolioMainProps) {
               </BarChart>
             </ResponsiveContainer>
           </div>
-          <div className="flex justify-center gap-3 mt-2 text-[10px] text-[#6E756A]">
+          <div className="flex justify-center gap-3 mt-2 text-[10px] text-[#4A5046]">
             <span className="flex items-center gap-1"><div className="w-2 h-2 bg-[#89BAB1] rounded-[2px]" /> 출근</span>
             <span className="flex items-center gap-1"><div className="w-2 h-2 bg-[#E68A00] rounded-[2px]" /> 지각</span>
             <span className="flex items-center gap-1"><div className="w-2 h-2 bg-[#E53935] rounded-[2px]" /> 결근</span>
@@ -186,9 +186,9 @@ export function PortfolioMain({ data, onDownload }: PortfolioMainProps) {
           </div>
 
           <div className="flex gap-2 mb-6 overflow-x-auto pb-1 scrollbar-hide">
-            <button onClick={() => setTrendTab("visits")} className={`shrink-0 px-3 py-1.5 rounded-full text-[13px] font-bold border transition-colors ${trendTab === "visits" ? "bg-[#F0F7F4] text-[#89BAB1] border-[#89BAB1]" : "bg-white text-[#6E756A] border-[#EBE8E0]"}`}>방문 횟수</button>
-            <button onClick={() => setTrendTab("hours")} className={`shrink-0 px-3 py-1.5 rounded-full text-[13px] font-bold border transition-colors ${trendTab === "hours" ? "bg-[#F0F7F4] text-[#89BAB1] border-[#89BAB1]" : "bg-white text-[#6E756A] border-[#EBE8E0]"}`}>돌봄 시간</button>
-            <button onClick={() => setTrendTab("elders")} className={`shrink-0 px-3 py-1.5 rounded-full text-[13px] font-bold border transition-colors ${trendTab === "elders" ? "bg-[#F0F7F4] text-[#89BAB1] border-[#89BAB1]" : "bg-white text-[#6E756A] border-[#EBE8E0]"}`}>담당 어르신 수</button>
+            <button onClick={() => setTrendTab("visits")} className={`shrink-0 px-3 py-1.5 rounded-full text-[13px] font-bold border transition-colors ${trendTab === "visits" ? "bg-[#F0F7F4] text-[#89BAB1] border-[#89BAB1]" : "bg-white text-[#4A5046] border-[#EBE8E0]"}`}>방문 횟수</button>
+            <button onClick={() => setTrendTab("hours")} className={`shrink-0 px-3 py-1.5 rounded-full text-[13px] font-bold border transition-colors ${trendTab === "hours" ? "bg-[#F0F7F4] text-[#89BAB1] border-[#89BAB1]" : "bg-white text-[#4A5046] border-[#EBE8E0]"}`}>돌봄 시간</button>
+            <button onClick={() => setTrendTab("elders")} className={`shrink-0 px-3 py-1.5 rounded-full text-[13px] font-bold border transition-colors ${trendTab === "elders" ? "bg-[#F0F7F4] text-[#89BAB1] border-[#89BAB1]" : "bg-white text-[#4A5046] border-[#EBE8E0]"}`}>담당 어르신 수</button>
           </div>
 
           <div className="h-[180px] w-full">
@@ -219,7 +219,7 @@ export function PortfolioMain({ data, onDownload }: PortfolioMainProps) {
                 <div className="w-12 h-12 rounded-full bg-[#F7F5F0] flex items-center justify-center mb-3">
                   {renderCareIcon(perf.iconType)}
                 </div>
-                <div className="text-[12px] text-[#6E756A] font-medium leading-snug mb-1 whitespace-pre-wrap">{perf.label}</div>
+                <div className="text-[12px] text-[#4A5046] font-medium leading-snug mb-1 whitespace-pre-wrap">{perf.label}</div>
                 <div className="text-[16px] font-bold text-[#2B2E28] mt-auto">{perf.value}</div>
               </div>
             ))}
@@ -243,7 +243,7 @@ export function PortfolioMain({ data, onDownload }: PortfolioMainProps) {
                   <div className="text-[#A4A9A0] shrink-0 sm:w-[110px]">{exp.period}</div>
                   <div className="flex items-start sm:items-center gap-1.5 flex-1">
                     <div className={`w-1.5 h-1.5 rounded-full mt-1.5 sm:mt-0 shrink-0 ${exp.isActive ? "bg-[#89BAB1]" : "bg-[#E0E0E0]"}`}></div>
-                    <span className={`font-bold leading-tight break-keep ${exp.isActive ? "text-[#89BAB1]" : "text-[#6E756A]"}`}>{exp.title}</span>
+                    <span className={`font-bold leading-tight break-keep ${exp.isActive ? "text-[#89BAB1]" : "text-[#4A5046]"}`}>{exp.title}</span>
                   </div>
                 </div>
               ))}
@@ -284,9 +284,9 @@ export function PortfolioMain({ data, onDownload }: PortfolioMainProps) {
                   <div className="w-10 h-10 rounded-full bg-white border-[3px] border-[#89BAB1] text-[#89BAB1] flex items-center justify-center mb-3">
                     {renderTimelineIcon(item.iconType)}
                   </div>
-                  <div className="text-[12px] font-bold text-[#6E756A] mb-1">{item.date}</div>
+                  <div className="text-[12px] font-bold text-[#4A5046] mb-1">{item.date}</div>
                   <div className="text-[13px] font-bold text-[#2B2E28] text-center leading-tight">{item.title}</div>
-                  <div className="text-[12px] text-[#6E756A] text-center">{item.subtitle}</div>
+                  <div className="text-[12px] text-[#4A5046] text-center">{item.subtitle}</div>
                 </div>
               ))}
             </div>

@@ -40,7 +40,7 @@ export function ChecklistPage({ visitId, onBack }: ChecklistPageProps) {
         <div className="bg-white rounded-[24px] p-6 shadow-sm border border-[#E7E2D3] mb-6">
           <div className="flex justify-between items-end mb-4">
             <div>
-              <p className="text-[#6E756A] text-[14px] font-medium mb-1">이순자 어르신</p>
+              <p className="text-[#4A5046] text-[14px] font-medium mb-1">이순자 어르신</p>
               <h2 className="text-[22px] font-bold text-[#2B2E28]">진행률</h2>
             </div>
             <span className="text-[32px] font-extrabold text-[#89BAB1] leading-none">
@@ -76,7 +76,7 @@ export function ChecklistPage({ visitId, onBack }: ChecklistPageProps) {
                 )}
               </div>
               <span className={`text-[16px] font-medium leading-snug flex-1 ${
-                task.completed ? "text-[#6E756A] line-through" : "text-[#2B2E28]"
+                task.completed ? "text-[#4A5046] line-through" : "text-[#2B2E28]"
               }`}>
                 {task.task}
               </span>

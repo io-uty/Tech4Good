@@ -31,7 +31,7 @@ export function HandoverList({ onSelect }: { onSelect: (id: string, name: string
       </header>
 
       <div className="px-5 mb-6 shrink-0 w-full">
-        <p className="text-[15px] text-[#6E756A] m-0">담당 중인 어르신을 선택해 주세요</p>
+        <p className="text-[15px] text-[#4A5046] m-0">담당 중인 어르신을 선택해 주세요</p>
       </div>
 
       {isLoading ? (
@@ -52,9 +52,9 @@ export function HandoverList({ onSelect }: { onSelect: (id: string, name: string
                 </div>
                 <div>
                   <div className="text-[17px] font-bold text-[#2B2E28] mb-1">
-                    {elder.name} 어르신 <span className="text-[14px] text-[#6E756A] font-medium ml-1">({elder.gender}, {elder.age}세)</span>
+                    {elder.name} 어르신 <span className="text-[14px] text-[#4A5046] font-medium ml-1">({elder.gender}, {elder.age}세)</span>
                   </div>
-                  <div className="text-[13px] text-[#6E756A]">{elder.address}</div>
+                  <div className="text-[13px] text-[#4A5046]">{elder.address}</div>
                 </div>
               </div>
               <ChevronRight className="text-[#A4A9A0]" size={20} />
