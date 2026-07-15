@@ -156,6 +156,9 @@ public class DevSeedService {
 				.build();
 		visitLogRepository.save(draftLog);
 
+		List<VisitLog> bulkLogs = buildBulkPortfolioLogs();
+		visitLogRepository.saveAll(bulkLogs);
+
 		CareWorker worker001 = CareWorker.builder()
 				.workerId("worker-001")
 				.name("정현민")
@@ -181,11 +184,55 @@ public class DevSeedService {
 				.build();
 		careWorkerRepository.save(worker001);
 
-		log.info("더미 데이터 시딩 완료: elders={}, visitLogs={}, careWorkers=1", elders.size(), logs.size());
+		log.info("더미 데이터 시딩 완료: elders={}, visitLogs={}(+대량 {}), careWorkers=1",
+				elders.size(), logs.size(), bulkLogs.size());
 		return Map.of(
 				"elders", elders.stream().map(Elder::getElderId).toList(),
-				"visitLogCount", logs.size() + 1,
+				"visitLogCount", logs.size() + 1 + bulkLogs.size(),
 				"careWorkers", List.of("worker-001"));
+	}
+
+	/**
+	 * 포트폴리오 데모용 대량 확정 방문일지 — worker-001에게 신규 합성 어르신 120명 x 10건씩(1,200건) 부여해
+	 * 총 방문 수·돌봄 시간을 4자리, 담당 어르신 수를 3자리 단위로 만든다. elders 컬렉션에는 쓰지 않는다
+	 * (포트폴리오 집계는 visitLogs의 distinct elderId만으로 계산되므로 어르신 프로필 문서가 불필요).
+	 */
+	private List<VisitLog> buildBulkPortfolioLogs() {
+		String[] serviceTypes = { "안전지원", "사회참여", "일상생활지원" };
+		String[] months = {
+				"2025-07", "2025-08", "2025-09", "2025-10", "2025-11", "2025-12",
+				"2026-01", "2026-02", "2026-03", "2026-04", "2026-05", "2026-06" };
+
+		java.util.List<VisitLog> bulk = new java.util.ArrayList<>();
+		int seq = 0;
+		for (int e = 1; e <= 120; e++) {
+			String elderId = String.format("elder-b%03d", e);
+			for (int j = 1; j <= 10; j++) {
+				String month = months[seq % months.length];
+				int day = (seq % 27) + 1;
+				String dateTime = String.format("%s-%02dT10:00:00", month, day);
+				String serviceType = serviceTypes[seq % serviceTypes.length];
+				bulk.add(VisitLog.builder()
+						.logId(String.format("log-b%03d-%02d", e, j))
+						.elderId(elderId)
+						.workerId("worker-001")
+						.visitDateTime(dateTime)
+						.rawSttText("(음성 메모) 정기 방문 - 컨디션 양호")
+						.structuredLog(VisitLog.StructuredLog.builder()
+								.serviceType(serviceType)
+								.activityDetail("정기 방문 지원")
+								.elderCondition("컨디션 양호")
+								.specialNote("")
+								.build())
+						.riskTags(List.of())
+						.status("confirmed")
+						.confirmedBy("worker-001")
+						.confirmedAt(dateTime)
+						.build());
+				seq++;
+			}
+		}
+		return bulk;
 	}
 
 	private static VisitLog log(String logId, String elderId, String dateTime, String serviceType,

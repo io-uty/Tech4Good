@@ -59,10 +59,21 @@ export async function getElderProfile(elderId: string): Promise<ElderProfileType
   };
 }
 
+function guessAudioExtension(mimeType: string): string {
+  if (mimeType.includes("webm")) return "webm";
+  if (mimeType.includes("ogg")) return "ogg";
+  if (mimeType.includes("mp4") || mimeType.includes("aac")) return "m4a";
+  if (mimeType.includes("wav")) return "wav";
+  return "webm";
+}
+
 export async function submitStt(audioFile: Blob | File): Promise<{ rawText: string }> {
   try {
     const formData = new FormData();
-    formData.append("audioFile", audioFile);
+    const filename = audioFile instanceof File
+      ? audioFile.name
+      : `recording.${guessAudioExtension(audioFile.type)}`;
+    formData.append("audioFile", audioFile, filename);
 
     const res = await fetch(`${API_BASE}/stt`, {
       method: "POST",

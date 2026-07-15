@@ -221,7 +221,12 @@ public class PortfolioService {
 		if (candidates.isEmpty()) {
 			return List.of();
 		}
-		String userPrompt = PortfolioPrompts.buildTimelineUserPrompt(candidates);
+		// 담당 어르신 수가 많으면 후보(특히 신규배정)가 수백 건까지 늘어날 수 있어 프롬프트가 비대해진다.
+		// 최근 순으로 최대 40건만 LLM에 전달 — 응답 지연·토큰 초과를 방지한다.
+		List<PortfolioPrompts.MilestoneCandidate> promptCandidates = candidates.size() > 40
+				? candidates.subList(candidates.size() - 40, candidates.size())
+				: candidates;
+		String userPrompt = PortfolioPrompts.buildTimelineUserPrompt(promptCandidates);
 		TimelineResponse response = claudeService.generateStructured(
 				PortfolioPrompts.TIMELINE_SYSTEM_PROMPT, userPrompt, TimelineResponse.class);
 		return response.getEntries();

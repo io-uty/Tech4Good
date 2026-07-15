@@ -10,7 +10,7 @@ export function PortfolioPage({ onDownload }: { onDownload: () => void }) {
   useEffect(() => {
     async function load() {
       try {
-        const res = await getPortfolio("worker-1");
+        const res = await getPortfolio("worker-001");
         setData(res);
       } catch (e) {
         console.error(e);

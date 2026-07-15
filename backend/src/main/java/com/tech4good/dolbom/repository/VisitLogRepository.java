@@ -77,6 +77,19 @@ public class VisitLogRepository extends FirestoreSupport {
 		await(db().collection(COLLECTION).document(log.getLogId()).set(toMap(log)));
 	}
 
+	/** 대량 시딩용 — Firestore WriteBatch(최대 500건/배치)로 나눠 커밋한다. */
+	public void saveAll(List<VisitLog> logs) {
+		Firestore firestore = db();
+		int batchSize = 450;
+		for (int i = 0; i < logs.size(); i += batchSize) {
+			var batch = firestore.batch();
+			for (VisitLog log : logs.subList(i, Math.min(i + batchSize, logs.size()))) {
+				batch.set(firestore.collection(COLLECTION).document(log.getLogId()), toMap(log));
+			}
+			await(batch.commit());
+		}
+	}
+
 	/** logId 접두사(예: "log_20260715_")로 시작하는 문서 수를 센다 — 일자별 순번 채번용 */
 	public int countByLogIdPrefix(String prefix) {
 		var query = db().collection(COLLECTION)
