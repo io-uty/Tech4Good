@@ -1,62 +1,36 @@
 package com.tech4good.dolbom.portfolio;
 
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 import java.util.stream.Collectors;
 
-import com.tech4good.dolbom.domain.VisitLog;
-
-/** 기능2(포트폴리오) 프롬프트 모음. HandoverPrompts와 같은 패턴을 따른다. */
+/**
+ * 기능2(포트폴리오) 프롬프트 모음.
+ * timeline은 백엔드가 신규배정/위험대응/근속마일스톤 후보를 결정론적으로 뽑아 넘기고,
+ * Claude는 그중 가장 주요한 것을 골라 date/title/subtitle/iconType으로 다듬기만 한다
+ * (환각 방지 원칙 — 후보에 없는 사건을 지어내지 않는다).
+ */
 public final class PortfolioPrompts {
 
 	public static final String TIMELINE_SYSTEM_PROMPT = """
-			당신은 노인 돌봄 생활지원사의 누적 방문 일지를 분석하는 전문가입니다.
-			아래 방문 일지 목록에서 어르신의 정서적/신체적 상태가 긍정적으로 변화한 사례를
-			근거와 함께 3~5건 골라주세요.
-			""";
-
-	public static final String CARE_BY_ELDER_SYSTEM_PROMPT = """
-			당신은 노인 돌봄 생활지원사의 방문 일지를 분석하는 전문가입니다.
-			여러 어르신별로 누적된 방문 일지 목록을 받아,
-			각 어르신마다 성향, 특이사항, 돌봄 과정에서의 주요 변화를 2~3문장으로 요약합니다.
-			입력에 있는 모든 어르신 ID에 대해 빠짐없이 하나씩 응답하세요.
+			당신은 노인 돌봄 생활지원사의 경력 타임라인을 정리하는 전문가입니다.
+			아래 [사건 후보 목록]은 방문일지·근속 정보에서 규칙 기반으로 이미 추출된 사실입니다.
+			이 목록에 없는 사건을 새로 만들어내지 마세요.
+			후보 중 이력서에 넣을 만큼 의미 있는 사건 3~6건을 골라, 각각 title(1문장)과
+			subtitle(근거 요약 1문장)을 자연스럽게 다듬어 반환하세요.
+			date와 iconType은 후보에 주어진 값을 그대로 사용하세요.
 			""";
 
 	private PortfolioPrompts() {
 	}
 
-	public static String buildTimelineUserPrompt(List<VisitLog> logs) {
-		String logsText = logs.stream()
-				.map(PortfolioPrompts::formatLogLine)
+	public record MilestoneCandidate(String date, String type, String iconType, String rawDescription) {
+	}
+
+	public static String buildTimelineUserPrompt(List<MilestoneCandidate> candidates) {
+		String candidateText = candidates.stream()
+				.map(c -> String.format("- date: %s / type: %s / iconType: %s / 내용: %s",
+						c.date(), c.type(), c.iconType(), c.rawDescription()))
 				.collect(Collectors.joining("\n"));
-		return "[방문 일지 목록]\n" + logsText;
-	}
-
-	public static String buildCareByElderUserPrompt(Set<String> elderIds, Map<String, List<VisitLog>> logsByElder) {
-		StringBuilder sb = new StringBuilder();
-		for (String elderId : elderIds) {
-			sb.append("### 어르신 ID: ").append(elderId).append("\n");
-			for (VisitLog log : logsByElder.get(elderId)) {
-				sb.append("- ").append(formatLogText(log)).append("\n");
-			}
-			sb.append("\n");
-		}
-		return "[어르신별 일지 목록]\n" + sb;
-	}
-
-	private static String formatLogLine(VisitLog log) {
-		return String.format("[%s] 어르신ID: %s / 내용: %s",
-				log.getVisitDateTime(), log.getElderId(), formatLogText(log));
-	}
-
-	private static String formatLogText(VisitLog log) {
-		VisitLog.StructuredLog s = log.getStructuredLog();
-		if (s == null) {
-			// structuredLog가 아직 없으면(후처리 전 등) STT 원문으로 대체
-			return String.valueOf(log.getRawSttText());
-		}
-		return String.format("서비스유형: %s / 활동내용: %s / 어르신상태: %s / 특이사항: %s",
-				s.getServiceType(), s.getActivityDetail(), s.getElderCondition(), s.getSpecialNote());
+		return "[사건 후보 목록]\n" + candidateText;
 	}
 }
