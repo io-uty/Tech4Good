@@ -6,16 +6,6 @@
 
 Tech4Good 해커톤 프로젝트
 
-[![React](https://img.shields.io/badge/React-19-61DAFB?logo=react&logoColor=white)](https://react.dev)
-[![TypeScript](https://img.shields.io/badge/TypeScript-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org)
-[![Vite](https://img.shields.io/badge/Vite-8-646CFF?logo=vite&logoColor=white)](https://vitejs.dev)
-[![Spring Boot](https://img.shields.io/badge/Spring%20Boot-4.1.0-6DB33F?logo=springboot&logoColor=white)](https://spring.io/projects/spring-boot)
-[![Firebase](https://img.shields.io/badge/Firestore-FFCA28?logo=firebase&logoColor=black)](https://firebase.google.com/products/firestore)
-[![Claude API](https://img.shields.io/badge/LLM-Claude%20API-D97757?logo=anthropic&logoColor=white)](https://www.anthropic.com)
-[![Vercel](https://img.shields.io/badge/Deployed%20on-Vercel-000000?logo=vercel&logoColor=white)](https://tech4-good-care-ez-mu.vercel.app/)
-
-**[🚀 배포된 서비스 바로가기 →](https://tech4-good-care-ez-mu.vercel.app/)**
-
 </div>
 
 <br>
