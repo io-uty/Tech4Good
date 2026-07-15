@@ -26,6 +26,16 @@ public class VisitLogService {
 	private final ClaudeService claudeService;
 	private final VisitLogRepository visitLogRepository;
 
+	/** 어르신별 확정 방문일지 전체 조회 (최신순) — 인수인계 카드 화면의 '일지 확인' 버튼용 */
+	public java.util.List<VisitLog> findByElderId(String elderId) {
+		if (elderId == null || elderId.isBlank()) {
+			throw new BadRequestException("elderId는 필수입니다.");
+		}
+		java.util.List<VisitLog> logs = new java.util.ArrayList<>(visitLogRepository.findConfirmedByElderId(elderId));
+		java.util.Collections.reverse(logs);
+		return logs;
+	}
+
 	public VisitLog createFromRawText(String workerId, String elderId, String rawText) {
 		if (workerId == null || workerId.isBlank()) {
 			throw new BadRequestException("workerId는 필수입니다.");

@@ -2,6 +2,8 @@ package com.tech4good.dolbom.visitlog;
 
 import java.io.IOException;
 
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -63,5 +65,11 @@ public class VisitLogController {
 		}
 		VisitLog log = visitLogService.createFromRawText(request.workerId(), request.elderId(), request.rawText());
 		return VisitLogResponse.from(log);
+	}
+
+	/** 어르신별 확정 방문일지 목록 조회 (최신순) — 인수인계 카드 화면의 '일지 확인' 버튼용 */
+	@GetMapping("/api/visit-logs/{elderId}")
+	public java.util.List<VisitLogResponse> listByElder(@PathVariable String elderId) {
+		return visitLogService.findByElderId(elderId).stream().map(VisitLogResponse::from).toList();
 	}
 }
