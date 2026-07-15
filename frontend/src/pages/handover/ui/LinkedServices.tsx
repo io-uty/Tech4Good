@@ -10,8 +10,8 @@ type LinkedServicesProps = {
 
 export function LinkedServices({ elderName, services, onBack }: LinkedServicesProps) {
   return (
-    <div className="flex-1 overflow-y-auto px-5 pt-[20px] pb-6 flex flex-col bg-[#F7F4EC]">
-      <div className="flex items-center gap-2 mb-5 shrink-0">
+    <div className="flex-1 overflow-y-auto px-5 pb-6 flex flex-col bg-[#F7F4EC]">
+      <div className="flex items-center gap-2 mb-5 shrink-0 sticky top-0 bg-[#F7F4EC]/90 backdrop-blur-sm z-20 pt-6 pb-4 -mx-5 px-5">
         <button onClick={onBack} className="w-9 h-9 flex items-center justify-center rounded-full bg-white shadow-sm border border-[#E7E2D3] text-[#2B2E28]">
           <ChevronLeft size={20} />
         </button>

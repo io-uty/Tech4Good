@@ -26,14 +26,11 @@ export function HandoverList({ onSelect }: { onSelect: (id: string, name: string
     <div className="flex-1 overflow-y-auto pb-6 flex flex-col bg-[#F7F4EC]">
       {/* Header */}
       <header className="flex justify-between items-center p-5 pt-6 sticky top-0 bg-[#F7F4EC]/90 backdrop-blur-sm z-10 shrink-0">
-        <div className="text-[22px] font-extrabold text-[#89BAB1] tracking-tight">HANA</div>
-        <button className="relative p-2 rounded-full hover:bg-black/5 transition-colors text-[#2B2E28]">
-          <Bell size={24} strokeWidth={2.5} />
-        </button>
+
+        <h1 className="text-[25px] font-bold mt-2 mb-1 text-[#2B2E28]">인수인계 브리핑</h1>
       </header>
 
       <div className="px-5 mb-6 shrink-0 w-full">
-        <h1 className="text-[25px] font-bold mt-2 mb-1 text-[#2B2E28]">인수인계 브리핑</h1>
         <p className="text-[15px] text-[#6E756A] m-0">담당 중인 어르신을 선택해 주세요</p>
       </div>
 
@@ -42,7 +39,7 @@ export function HandoverList({ onSelect }: { onSelect: (id: string, name: string
           <div className="w-8 h-8 rounded-full border-[3px] border-[#E3EEE7] border-t-[#89BAB1] animate-spin" />
         </div>
       ) : (
-        <div className="flex flex-col gap-4">
+        <div className="flex flex-col gap-4 px-5">
           {elders.map((elder) => (
             <button
               key={elder.elderId}

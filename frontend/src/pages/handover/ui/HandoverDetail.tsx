@@ -36,8 +36,8 @@ export function HandoverDetail({ elderId, elderName, onBack, onShowServices, onS
   }, [elderId]);
 
   return (
-    <div className="flex-1 overflow-y-auto px-5 pt-[20px] pb-6 flex flex-col bg-[#F7F4EC]">
-      <div className="flex items-center gap-2 mb-5 shrink-0">
+    <div className="flex-1 overflow-y-auto px-5 flex flex-col bg-[#F7F4EC] relative">
+      <div className="flex items-center gap-2 mb-5 shrink-0 sticky top-0 bg-[#F7F4EC]/90 backdrop-blur-sm z-20 pt-6 pb-4 -mx-5 px-5">
         <button onClick={onBack} className="w-9 h-9 flex items-center justify-center rounded-full bg-white shadow-sm border border-[#E7E2D3] text-[#2B2E28]">
           <ChevronLeft size={20} />
         </button>
@@ -106,15 +106,19 @@ export function HandoverDetail({ elderId, elderName, onBack, onShowServices, onS
               ))}
             </div>
           </section>
-
-          <button className="bg-[#89BAB1] text-white border-none rounded-xl p-4 text-[17px] font-bold cursor-pointer w-full mt-2 shrink-0 flex items-center justify-center gap-2 mb-2" onClick={onShare}>
-            <Share2 size={18} />
-            다음 담당자에게 공유
-          </button>
         </div>
       ) : (
         <div className="flex flex-1 items-center justify-center text-[#6E756A] text-[15px]">
           데이터를 불러오지 못했습니다.
+        </div>
+      )}
+
+      {profile && handover && (
+        <div className="sticky bottom-0 left-0 right-0 z-20 bg-[#F7F4EC]/90 backdrop-blur-sm pt-4 pb-6 mt-auto -mx-5 px-5">
+          <button className="bg-[#89BAB1] text-white border-none rounded-xl p-4 text-[17px] font-bold cursor-pointer w-full flex items-center justify-center gap-2 shadow-lg shadow-[#89BAB1]/20 hover:opacity-90 transition-colors" onClick={onShare}>
+            <Share2 size={18} />
+            다음 담당자에게 공유
+          </button>
         </div>
       )}
     </div>

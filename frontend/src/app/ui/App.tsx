@@ -13,6 +13,7 @@ export function App() {
   const [tab, setTab] = useState("home");
   const [toast, setToast] = useState<string | null>(null);
   const [selectedVisitId, setSelectedVisitId] = useState<number | null>(null);
+  const [hideNav, setHideNav] = useState(false);
 
   function fire(msg: string) {
     setToast(msg);
@@ -39,11 +40,11 @@ export function App() {
           />
         )}
         {tab === "voice" && <VoiceLogPage onSubmit={() => fire("일지가 제출되었어요")} />}
-        {tab === "handover" && <HandoverPage onShare={() => fire("다음 담당자에게 공유했어요")} />}
+        {tab === "handover" && <HandoverPage onShare={() => fire("다음 담당자에게 공유했어요")} setHideNav={setHideNav} />}
         {tab === "portfolio" && <PortfolioPage onDownload={() => fire("다운로드 준비 중이에요")} />}
 
         <Toast message={toast} />
-        {isPrimaryTab && <BottomNav tab={tab} setTab={setTab} />}
+        {isPrimaryTab && !hideNav && <BottomNav tab={tab} setTab={setTab} />}
       </div>
     </div>
   );

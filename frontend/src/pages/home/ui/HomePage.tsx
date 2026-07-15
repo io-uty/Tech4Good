@@ -1,5 +1,6 @@
 import React, { useState, useMemo } from "react";
 import { Bell, ChevronRight, Clock, MapPin } from "lucide-react";
+import logo from "../../../logo.webp";
 
 const generateDates = () => {
   const dates = [];
@@ -68,11 +69,7 @@ export function HomePage({ onNavigateToChecklist }: HomePageProps) {
     <div className="flex-1 overflow-y-auto pb-5 relative no-scrollbar flex flex-col bg-[#F7F5F0]">
       {/* Header */}
       <header className="flex justify-between items-center p-5 pt-6 sticky top-0 bg-[#F7F5F0]/90 backdrop-blur-sm z-10">
-        <div className="text-[22px] font-extrabold text-[#89BAB1] tracking-tight">HANA</div>
-        <button className="relative p-2 rounded-full hover:bg-black/5 transition-colors text-[#2B2E28]">
-          <Bell size={24} strokeWidth={2.5} />
-          <span className="absolute top-2 right-2 w-2 h-2 bg-red-500 rounded-full border border-[#F7F5F0]"></span>
-        </button>
+        <img src={logo} alt="HANA Logo" className="h-6 object-contain" />
       </header>
 
       {/* Greeting */}
@@ -96,8 +93,8 @@ export function HomePage({ onNavigateToChecklist }: HomePageProps) {
               >
                 <span className="text-[13px] font-bold text-[#8C8279]">{d.day}</span>
                 <div className={`relative flex items-center justify-center w-11 h-11 rounded-full text-[17px] font-bold transition-all ${isSelected
-                    ? "bg-[#89BAB1] text-white shadow-md shadow-[#89BAB1]/30"
-                    : "bg-white text-[#2B2E28] hover:bg-[#F0ECE1]"
+                  ? "bg-[#89BAB1] text-white shadow-md shadow-[#89BAB1]/30"
+                  : "bg-white text-[#2B2E28] hover:bg-[#F0ECE1]"
                   }`}
                 >
                   {d.date}
@@ -169,48 +166,48 @@ export function HomePage({ onNavigateToChecklist }: HomePageProps) {
 
         {/* Next Visit Summary */}
         {nextVisit && (
-      <section className="mb-4">
-        <h2 className="text-[19px] font-bold text-[#2B2E28] mb-4">다음 방문 요약</h2>
+          <section className="mb-4">
+            <h2 className="text-[19px] font-bold text-[#2B2E28] mb-4">다음 방문 요약</h2>
 
-        <button
-          onClick={() => onNavigateToChecklist?.(nextVisit.id)}
-          className="w-full text-left bg-gradient-to-br from-[#89BAB1] to-[#1E3E35] rounded-[24px] p-6 text-white shadow-xl shadow-[#89BAB1]/20 relative overflow-hidden group hover:scale-[1.02] transition-transform duration-300"
-        >
-          <div className="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
+            <button
+              onClick={() => onNavigateToChecklist?.(nextVisit.id)}
+              className="w-full text-left bg-gradient-to-br from-[#89BAB1] to-[#1E3E35] rounded-[24px] p-6 text-white shadow-xl shadow-[#89BAB1]/20 relative overflow-hidden group hover:scale-[1.02] transition-transform duration-300"
+            >
+              <div className="absolute -right-4 -top-4 w-24 h-24 bg-white/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
 
-          <div className="flex justify-between items-start relative z-10">
-            <div>
-              <div className="flex items-center gap-1.5 text-white/80 text-[14px] font-medium mb-1">
-                <Clock size={16} />
-                <span>{nextVisit.time} 예정</span>
+              <div className="flex justify-between items-start relative z-10">
+                <div>
+                  <div className="flex items-center gap-1.5 text-white/80 text-[14px] font-medium mb-1">
+                    <Clock size={16} />
+                    <span>{nextVisit.time} 예정</span>
+                  </div>
+                  <h3 className="text-[24px] font-bold mt-1 mb-2">
+                    {nextVisit.name} 어르신
+                  </h3>
+                  <div className="flex items-center gap-1 text-white/80 text-[14px]">
+                    <MapPin size={14} />
+                    <span className="truncate">{nextVisit.location}</span>
+                  </div>
+                </div>
+
+                <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-md">
+                  <ChevronRight size={20} className="text-white" />
+                </div>
               </div>
-              <h3 className="text-[24px] font-bold mt-1 mb-2">
-                {nextVisit.name} 어르신
-              </h3>
-              <div className="flex items-center gap-1 text-white/80 text-[14px]">
-                <MapPin size={14} />
-                <span className="truncate">{nextVisit.location}</span>
-              </div>
-            </div>
 
-            <div className="w-10 h-10 rounded-full bg-white/20 flex items-center justify-center backdrop-blur-md">
-              <ChevronRight size={20} className="text-white" />
-            </div>
-          </div>
-
-          {nextVisit.tags && (
-            <div className="flex gap-2 mt-5 relative z-10">
-              {nextVisit.tags.map((tag, idx) => (
-                <span key={idx} className="bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-[13px] font-medium text-white/95">
-                  {tag}
-                </span>
-              ))}
-            </div>
-          )}
-        </button>
-      </section>
-    )
-  }
+              {nextVisit.tags && (
+                <div className="flex gap-2 mt-5 relative z-10">
+                  {nextVisit.tags.map((tag, idx) => (
+                    <span key={idx} className="bg-white/20 backdrop-blur-md px-3 py-1.5 rounded-full text-[13px] font-medium text-white/95">
+                      {tag}
+                    </span>
+                  ))}
+                </div>
+              )}
+            </button>
+          </section>
+        )
+        }
 
       </div >
     </div >

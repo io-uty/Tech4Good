@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { Download, User, Clock, Users, CalendarCheck, ShieldCheck, HeartPulse, Pill, Utensils, Stethoscope, AlertTriangle, BadgeCheck, MessageSquare, Star } from "lucide-react";
+import { Bell, Download, User, Clock, Users, CalendarCheck, ShieldCheck, HeartPulse, Pill, Utensils, Stethoscope, AlertTriangle, BadgeCheck, MessageSquare, Star } from "lucide-react";
 import { PortfolioResponse } from "../../../shared/types";
 import { PieChart, Pie, Cell, ResponsiveContainer, BarChart, Bar, XAxis, YAxis, Tooltip, CartesianGrid, LineChart, Line } from "recharts";
 
@@ -36,26 +36,31 @@ export function PortfolioMain({ data, onDownload }: PortfolioMainProps) {
   };
 
   return (
-    <div className="flex-1 overflow-y-auto bg-[#F7F5F0] pb-8">
+    <div className="flex-1 overflow-y-auto bg-[#F7F5F0] pb-8 relative">
+      {/* Header */}
+      <header className="flex justify-between items-center p-5 pt-6 sticky top-0 bg-[#F7F5F0]/90 backdrop-blur-sm z-50">
+        <div className="text-[22px] font-extrabold text-[#89BAB1] tracking-tight">포트폴리오</div>
+      </header>
+
       {/* 0. 프로필 카드 섹션 */}
-      <div className="px-4 pt-4 mb-2">
-        <div className="bg-[#1A8B6A] rounded-[24px] p-5 text-white shadow-sm relative overflow-hidden">
+      <div className="px-4 pt-1 mb-2">
+        <div className="bg-gradient-to-br from-[#89BAB1] to-[#1E3E35] rounded-xl p-5 text-white shadow-sm relative overflow-hidden">
           <div className="flex items-center gap-4 relative z-10">
             <div className="flex-1">
               <div className="flex items-end gap-1.5 mb-1">
-                <h1 className="text-[20px] font-bold leading-tight">김민정</h1>
+                <h1 className="text-[20px] font-bold leading-tight">박복자</h1>
                 <span className="text-[14px] text-white/90">생활지원사</span>
               </div>
               <div className="text-[13px] text-white/90 mb-4">행복돌봄센터</div>
-              
+
               <div className="flex items-center gap-4">
                 <div className="flex flex-col items-start">
                   <span className="bg-white/15 px-2 py-1 rounded-lg text-[11px] text-white/90 mb-1">생활지원사 경력</span>
                   <span className="text-[15px] font-bold">2년 3개월</span>
                 </div>
-                
+
                 <div className="w-[1px] h-10 bg-white/30 shrink-0"></div>
-                
+
                 <div className="flex flex-col items-start">
                   <span className="bg-white/15 px-2 py-1 rounded-lg text-[11px] text-white/90 mb-1">현 기관 근무기간</span>
                   <span className="text-[15px] font-bold">2026.01 ~ 2026.12</span>
@@ -131,7 +136,7 @@ export function PortfolioMain({ data, onDownload }: PortfolioMainProps) {
 
             <div className="flex-1 grid grid-cols-2 gap-y-3 pl-4">
               <div>
-                <div className="text-[11px] text-[#6E756A] mb-0.5 flex items-center gap-1"><CalendarCheck size={12} className="text-[#89BAB1]"/> 총 근무일</div>
+                <div className="text-[11px] text-[#6E756A] mb-0.5 flex items-center gap-1"><CalendarCheck size={12} className="text-[#89BAB1]" /> 총 근무일</div>
                 <div className="text-[15px] font-bold text-[#2B2E28]">{data.attendanceStats.totalWorkDays}일</div>
               </div>
               <div>
@@ -139,11 +144,11 @@ export function PortfolioMain({ data, onDownload }: PortfolioMainProps) {
                 <div className="text-[15px] font-bold text-[#2B2E28]">{data.attendanceStats.absence}일</div>
               </div>
               <div>
-                <div className="text-[11px] text-[#6E756A] mb-0.5 flex items-center gap-1"><Clock size={12} className="text-[#E68A00]"/> 지각</div>
+                <div className="text-[11px] text-[#6E756A] mb-0.5 flex items-center gap-1"><Clock size={12} className="text-[#E68A00]" /> 지각</div>
                 <div className="text-[15px] font-bold text-[#2B2E28]">{data.attendanceStats.late}회</div>
               </div>
               <div>
-                <div className="text-[11px] text-[#6E756A] mb-0.5 flex items-center gap-1"><BadgeCheck size={12} className="text-[#89BAB1]"/> 일지 완료율</div>
+                <div className="text-[11px] text-[#6E756A] mb-0.5 flex items-center gap-1"><BadgeCheck size={12} className="text-[#89BAB1]" /> 일지 완료율</div>
                 <div className="text-[15px] font-bold text-[#2B2E28]">{data.attendanceStats.logCompletionRate}%</div>
               </div>
             </div>
@@ -152,8 +157,8 @@ export function PortfolioMain({ data, onDownload }: PortfolioMainProps) {
           <div className="h-[120px] w-full">
             <ResponsiveContainer width="100%" height="100%">
               <BarChart data={data.attendanceMonthly} margin={{ top: 0, right: 0, left: -25, bottom: 0 }} barSize={6}>
-                <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#A4A9A0' }} dy={10}/>
-                <Tooltip cursor={{fill: '#F5F5F5'}} contentStyle={{ fontSize: '12px', borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
+                <XAxis dataKey="month" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#A4A9A0' }} dy={10} />
+                <Tooltip cursor={{ fill: '#F5F5F5' }} contentStyle={{ fontSize: '12px', borderRadius: '8px', border: 'none', boxShadow: '0 4px 12px rgba(0,0,0,0.1)' }} />
                 <Bar dataKey="attendance" stackId="a" fill="#89BAB1" radius={[0, 0, 4, 4]} />
                 <Bar dataKey="late" stackId="a" fill="#E68A00" />
                 <Bar dataKey="absence" stackId="a" fill="#E53935" />
@@ -179,7 +184,7 @@ export function PortfolioMain({ data, onDownload }: PortfolioMainProps) {
               <h2 className="text-[16px] font-bold text-[#2B2E28]">활동 추이 <span className="text-[13px] text-[#A4A9A0] font-normal">(월별)</span></h2>
             </div>
           </div>
-          
+
           <div className="flex gap-2 mb-6 overflow-x-auto pb-1 scrollbar-hide">
             <button onClick={() => setTrendTab("visits")} className={`shrink-0 px-3 py-1.5 rounded-full text-[13px] font-bold border transition-colors ${trendTab === "visits" ? "bg-[#F0F7F4] text-[#89BAB1] border-[#89BAB1]" : "bg-white text-[#6E756A] border-[#EBE8E0]"}`}>방문 횟수</button>
             <button onClick={() => setTrendTab("hours")} className={`shrink-0 px-3 py-1.5 rounded-full text-[13px] font-bold border transition-colors ${trendTab === "hours" ? "bg-[#F0F7F4] text-[#89BAB1] border-[#89BAB1]" : "bg-white text-[#6E756A] border-[#EBE8E0]"}`}>돌봄 시간</button>
@@ -207,7 +212,7 @@ export function PortfolioMain({ data, onDownload }: PortfolioMainProps) {
             <BadgeCheck size={18} className="text-[#89BAB1]" />
             <h2 className="text-[16px] font-bold text-[#2B2E28]">주요 돌봄 수행 실적 <span className="text-[13px] text-[#A4A9A0] font-normal">(1년)</span></h2>
           </div>
-          
+
           <div className="flex gap-3 overflow-x-auto pb-2 scrollbar-hide snap-x">
             {data.carePerformances.map((perf) => (
               <div key={perf.id} className="snap-start shrink-0 w-[110px] bg-white rounded-xl p-4 border border-[#F0F0F0] shadow-[0_2px_8px_rgba(0,0,0,0.03)] flex flex-col items-center text-center">
@@ -230,7 +235,7 @@ export function PortfolioMain({ data, onDownload }: PortfolioMainProps) {
               <CalendarCheck size={18} className="text-[#89BAB1]" />
               <h2 className="text-[16px] font-bold text-[#2B2E28]">경력 및 자격</h2>
             </div>
-            
+
             <div className="text-[12px] text-[#A4A9A0] mb-2 font-bold">경력</div>
             <div className="bg-[#FBFBFA] rounded-xl p-3 border border-[#F0F0F0] flex flex-col gap-3">
               {data.experiences.map((exp, i) => (
@@ -244,7 +249,7 @@ export function PortfolioMain({ data, onDownload }: PortfolioMainProps) {
               ))}
             </div>
           </div>
-          
+
           <div>
             <div className="text-[12px] text-[#A4A9A0] mb-2 font-bold mt-2 md:mt-0">보유 자격증</div>
             <div className="flex flex-col gap-3">
@@ -270,12 +275,12 @@ export function PortfolioMain({ data, onDownload }: PortfolioMainProps) {
             <h2 className="text-[16px] font-bold text-[#2B2E28]">경력 타임라인</h2>
           </div>
 
-          <div className="overflow-x-auto scrollbar-hide pb-4">
-            <div className="flex min-w-max relative px-2">
-              <div className="absolute top-5 left-8 right-8 h-1 bg-[#89BAB1] rounded-full"></div>
-              
+          <div className="overflow-x-auto scrollbar-hide pb-4 -mx-5 px-5">
+            <div className="flex min-w-max relative -ml-3">
+              <div className="absolute top-5 left-10 right-10 h-1 bg-[#89BAB1] rounded-full"></div>
+
               {data.timeline.map((item, i) => (
-                <div key={i} className="flex flex-col items-center w-[120px] relative z-10 shrink-0">
+                <div key={i} className="flex flex-col items-center w-[110px] relative z-10 shrink-0">
                   <div className="w-10 h-10 rounded-full bg-white border-[3px] border-[#89BAB1] text-[#89BAB1] flex items-center justify-center mb-3">
                     {renderTimelineIcon(item.iconType)}
                   </div>
@@ -288,7 +293,7 @@ export function PortfolioMain({ data, onDownload }: PortfolioMainProps) {
           </div>
         </div>
       </div>
-      
+
       <div className="px-4">
         <button className="bg-[#89BAB1] text-white border-none rounded-xl p-4 text-[17px] font-bold cursor-pointer w-full flex items-center justify-center gap-2 shadow-sm" onClick={onDownload}>
           <Download size={18} />

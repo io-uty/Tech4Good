@@ -1,13 +1,23 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { HandoverList } from "./HandoverList";
 import { HandoverDetail } from "./HandoverDetail";
 import { LinkedServices } from "./LinkedServices";
 import { LinkedServiceType } from "../../../shared/types";
 
-export function HandoverPage({ onShare }: { onShare: () => void }) {
+export function HandoverPage({ onShare, setHideNav }: { onShare: () => void, setHideNav?: (hide: boolean) => void }) {
   const [view, setView] = useState<"list" | "detail" | "services">("list");
   const [selectedElder, setSelectedElder] = useState<{ id: string; name: string } | null>(null);
   const [servicesData, setServicesData] = useState<LinkedServiceType[]>([]);
+
+  useEffect(() => {
+    if (setHideNav) {
+      setHideNav(view !== "list");
+    }
+    // Cleanup to ensure nav shows when unmounting HandoverPage altogether
+    return () => {
+      if (setHideNav) setHideNav(false);
+    };
+  }, [view, setHideNav]);
 
   const handleSelectElder = (id: string, name: string) => {
     setSelectedElder({ id, name });
