@@ -38,6 +38,20 @@ public class VisitLogRepository extends FirestoreSupport {
 				.toList();
 	}
 
+	/**
+	 * 확정(confirmed)된 방문일지를 workerId 기준으로 시간순 정렬해 반환 — 기능2 포트폴리오 집계용.
+	 * (findConfirmedByElderId와 완전히 같은 패턴, 필터 필드만 workerId로 다름)
+	 */
+	public List<VisitLog> findConfirmedByWorkerId(String workerId) {
+		var snapshot = await(db().collection(COLLECTION).whereEqualTo("workerId", workerId).get());
+		return snapshot.getDocuments().stream()
+				.map(doc -> objectMapper.convertValue(doc.getData(), VisitLog.class))
+				.filter(log -> "confirmed".equals(log.getStatus()))
+				.sorted(Comparator.comparing(VisitLog::getVisitDateTime,
+						Comparator.nullsFirst(Comparator.naturalOrder())))
+				.toList();
+	}
+
 	public Optional<VisitLog> findById(String logId) {
 		return fromSnapshot(await(db().collection(COLLECTION).document(logId).get()), VisitLog.class);
 	}
@@ -51,5 +65,14 @@ public class VisitLogRepository extends FirestoreSupport {
 
 	public void save(VisitLog log) {
 		await(db().collection(COLLECTION).document(log.getLogId()).set(toMap(log)));
+	}
+
+	/** logId 접두사(예: "log_20260715_")로 시작하는 문서 수를 센다 — 일자별 순번 채번용 */
+	public int countByLogIdPrefix(String prefix) {
+		var query = db().collection(COLLECTION)
+				.orderBy(com.google.cloud.firestore.FieldPath.documentId())
+				.startAt(prefix)
+				.endAt(prefix + "\uf8ff");
+		return await(query.get()).size();
 	}
 }
