@@ -69,7 +69,7 @@ export function HandoverDetail({ elderId, elderName, onBack, onShowServices, onS
               >
                 <div>
                   <div className="text-[14px] font-bold text-[#89BAB1] mb-0.5">연계 서비스 현황</div>
-                  <div className="text-[13px] text-[#6E756A]">{profile.linkedServices.length}개의 서비스를 받고 계십니다</div>
+                  <div className="text-[13px] text-[#4A5046]">{profile.linkedServices.length}개의 서비스를 받고 계십니다</div>
                 </div>
                 <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm">
                   <ChevronRight size={18} className="text-[#89BAB1]" />
@@ -108,7 +108,7 @@ export function HandoverDetail({ elderId, elderName, onBack, onShowServices, onS
           </section>
         </div>
       ) : (
-        <div className="flex flex-1 items-center justify-center text-[#6E756A] text-[15px]">
+        <div className="flex flex-1 items-center justify-center text-[#4A5046] text-[15px]">
           데이터를 불러오지 못했습니다.
         </div>
       )}

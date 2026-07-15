@@ -31,7 +31,7 @@ export function PortfolioPage({ onDownload }: { onDownload: () => void }) {
 
   if (!data) {
     return (
-      <div className="flex flex-1 items-center justify-center text-[#6E756A] text-[15px] bg-[#F7F5F0]">
+      <div className="flex flex-1 items-center justify-center text-[#4A5046] text-[15px] bg-[#F7F5F0]">
         데이터가 없습니다.
       </div>
     );

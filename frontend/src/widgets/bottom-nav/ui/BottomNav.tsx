@@ -19,7 +19,7 @@ export function BottomNav({ tab, setTab }: BottomNavProps) {
         <button
           key={it.key}
           className={`flex-1 border-none bg-transparent cursor-pointer flex flex-col items-center gap-1 text-[12.5px] font-semibold py-1.5 ${
-            tab === it.key ? "text-[#89BAB1]" : "text-[#6E756A]"
+            tab === it.key ? "text-[#89BAB1]" : "text-[#4A5046]"
           }`}
           onClick={() => setTab(it.key)}
         >
