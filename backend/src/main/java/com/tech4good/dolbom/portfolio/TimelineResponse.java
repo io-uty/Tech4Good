@@ -16,6 +16,6 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class TimelineResponse {
 
-	@JsonPropertyDescription("어르신의 정서적/신체적 상태가 긍정적으로 변화한 사례 3~5건")
+	@JsonPropertyDescription("사건 후보 목록 중 선별한 경력 타임라인 마일스톤 3~6건")
 	private List<TimelineEntry> entries;
 }

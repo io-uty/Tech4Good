@@ -6,8 +6,10 @@ import java.util.Map;
 
 import org.springframework.stereotype.Service;
 
+import com.tech4good.dolbom.domain.CareWorker;
 import com.tech4good.dolbom.domain.Elder;
 import com.tech4good.dolbom.domain.VisitLog;
+import com.tech4good.dolbom.repository.CareWorkerRepository;
 import com.tech4good.dolbom.repository.ElderRepository;
 import com.tech4good.dolbom.repository.VisitLogRepository;
 
@@ -31,6 +33,7 @@ public class DevSeedService {
 
 	private final ElderRepository elderRepository;
 	private final VisitLogRepository visitLogRepository;
+	private final CareWorkerRepository careWorkerRepository;
 
 	public Map<String, Object> seed() {
 		String now = LocalDateTime.now().toString();
@@ -137,10 +140,52 @@ public class DevSeedService {
 						"다음 주 교회 야유회를 기대하고 계심."));
 		logs.forEach(visitLogRepository::save);
 
-		log.info("더미 데이터 시딩 완료: elders={}, visitLogs={}", elders.size(), logs.size());
+		// 초안 상태 로그 1건 — logCompletionRate(일지 완료율)가 100%로만 나오지 않도록 심어둠
+		VisitLog draftLog = VisitLog.builder()
+				.logId("log-021")
+				.elderId("elder-001")
+				.workerId("worker-001")
+				.visitDateTime("2026-06-25T10:30:00")
+				.rawSttText("(음성 메모) 아직 검토 전")
+				.structuredLog(VisitLog.StructuredLog.builder()
+						.serviceType("일상생활지원")
+						.activityDetail("밑반찬 전달")
+						.build())
+				.riskTags(List.of())
+				.status("draft")
+				.build();
+		visitLogRepository.save(draftLog);
+
+		CareWorker worker001 = CareWorker.builder()
+				.workerId("worker-001")
+				.name("정현민")
+				.org("창원시 노인맞춤돌봄서비스 의창지사")
+				.hireDate("2024-09-01")
+				.contractEndDate(null)
+				.assignedElderIds(List.of("elder-001", "elder-002", "elder-003"))
+				.certificates(List.of(
+						CareWorker.Certificate.builder().title("요양보호사 1급").date("2023.06").build(),
+						CareWorker.Certificate.builder().title("생활지원사 직무교육 수료").date("2024.08").build()))
+				.experiences(List.of(
+						CareWorker.Experience.builder()
+								.period("2024.09 ~ 현재").title("창원시 노인맞춤돌봄서비스 의창지사 근무").isActive(true).build(),
+						CareWorker.Experience.builder()
+								.period("2022.03 ~ 2024.08").title("○○ 요양원 요양보호사").isActive(false).build()))
+				.attendanceMonthly(List.of(
+						CareWorker.MonthlyAttendance.builder().month("1월").attendance(20).late(1).absence(0).vacation(1).build(),
+						CareWorker.MonthlyAttendance.builder().month("2월").attendance(18).late(0).absence(1).vacation(1).build(),
+						CareWorker.MonthlyAttendance.builder().month("3월").attendance(21).late(1).absence(0).vacation(0).build(),
+						CareWorker.MonthlyAttendance.builder().month("4월").attendance(19).late(0).absence(0).vacation(2).build(),
+						CareWorker.MonthlyAttendance.builder().month("5월").attendance(20).late(2).absence(0).vacation(0).build(),
+						CareWorker.MonthlyAttendance.builder().month("6월").attendance(19).late(0).absence(1).vacation(1).build()))
+				.build();
+		careWorkerRepository.save(worker001);
+
+		log.info("더미 데이터 시딩 완료: elders={}, visitLogs={}, careWorkers=1", elders.size(), logs.size());
 		return Map.of(
 				"elders", elders.stream().map(Elder::getElderId).toList(),
-				"visitLogCount", logs.size());
+				"visitLogCount", logs.size() + 1,
+				"careWorkers", List.of("worker-001"));
 	}
 
 	private static VisitLog log(String logId, String elderId, String dateTime, String serviceType,

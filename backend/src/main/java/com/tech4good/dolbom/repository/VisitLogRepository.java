@@ -52,6 +52,16 @@ public class VisitLogRepository extends FirestoreSupport {
 				.toList();
 	}
 
+	/** 상태(draft/confirmed) 무관 전체 조회 — 기능2 logCompletionRate(일지 완료율) 계산용 */
+	public List<VisitLog> findAllByWorkerId(String workerId) {
+		var snapshot = await(db().collection(COLLECTION).whereEqualTo("workerId", workerId).get());
+		return snapshot.getDocuments().stream()
+				.map(doc -> objectMapper.convertValue(doc.getData(), VisitLog.class))
+				.sorted(Comparator.comparing(VisitLog::getVisitDateTime,
+						Comparator.nullsFirst(Comparator.naturalOrder())))
+				.toList();
+	}
+
 	public Optional<VisitLog> findById(String logId) {
 		return fromSnapshot(await(db().collection(COLLECTION).document(logId).get()), VisitLog.class);
 	}
