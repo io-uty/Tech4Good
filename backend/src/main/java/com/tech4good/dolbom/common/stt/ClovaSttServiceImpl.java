@@ -63,6 +63,7 @@ public class ClovaSttServiceImpl implements SttService {
 				throw new IllegalStateException(
 						"Naver Clova STT 호출 실패 (status=" + response.statusCode() + "): " + response.body());
 			}
+			log.info("Clova STT raw response: {}", response.body());
 			var node = objectMapper.readTree(response.body());
 			var textNode = node.get("text");
 			if (textNode == null) {
