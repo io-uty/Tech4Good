@@ -1,0 +1,7 @@
+.DS_Store
+node_modules/
+*.log
+
+# 로컬 테스트용 오디오 파일
+*.m4a
+*.wav

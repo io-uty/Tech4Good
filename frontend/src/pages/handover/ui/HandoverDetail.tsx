@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { ChevronLeft, Info, HeartPulse, Home, Users, Gift, Share2, ChevronRight } from "lucide-react";
+import { ChevronLeft, Info, HeartPulse, Home, Users, Gift, Share2, ChevronRight, MessageCircle, AlertTriangle, Heart, Ban, FileClock } from "lucide-react";
 import { getElderProfile, getHandover } from "../../../shared/api";
 import { ElderProfileType, HandoverResponse } from "../../../shared/types";
 import { ThreadLine } from "../../../shared/ui/ThreadLine";
@@ -9,10 +9,11 @@ type HandoverDetailProps = {
   elderName: string;
   onBack: () => void;
   onShowServices: (services: any[]) => void;
+  onShowLogs: () => void;
   onShare: () => void;
 };
 
-export function HandoverDetail({ elderId, elderName, onBack, onShowServices, onShare }: HandoverDetailProps) {
+export function HandoverDetail({ elderId, elderName, onBack, onShowServices, onShowLogs, onShare }: HandoverDetailProps) {
   const [profile, setProfile] = useState<ElderProfileType | null>(null);
   const [handover, setHandover] = useState<HandoverResponse | null>(null);
   const [isLoading, setIsLoading] = useState(true);
@@ -75,37 +76,109 @@ export function HandoverDetail({ elderId, elderName, onBack, onShowServices, onS
                   <ChevronRight size={18} className="text-[#89BAB1]" />
                 </div>
               </button>
+
+              <button
+                onClick={onShowLogs}
+                className="mt-2 bg-[#F0ECE1] rounded-xl p-4 flex items-center justify-between hover:bg-[#E3EEE7] transition-colors cursor-pointer text-left w-full border border-[#DDD8C8]"
+              >
+                <div>
+                  <div className="text-[14px] font-bold text-[#89BAB1] mb-0.5">일지 확인</div>
+                  <div className="text-[13px] text-[#6E756A]">그동안의 방문 기록을 모두 확인해요</div>
+                </div>
+                <div className="w-8 h-8 rounded-full bg-white flex items-center justify-center shadow-sm">
+                  <ChevronRight size={18} className="text-[#89BAB1]" />
+                </div>
+              </button>
             </div>
           </section>
 
-          {/* 대화 팁 */}
+          {/* 성향 및 대화 특징 */}
           <section>
             <h2 className="text-[17px] font-bold text-[#2B2E28] mb-3 flex items-center gap-1.5">
-              <span className="w-[5px] h-[5px] bg-[#89BAB1] rounded-full"></span> 대화 팁
+              <span className="w-[5px] h-[5px] bg-[#89BAB1] rounded-full"></span> 성향 및 대화 특징
             </h2>
-            <div className="flex flex-col">
-              {handover.tips.map((t, i) => (
-                <div key={i} className="flex gap-3 relative group">
-                  {/* 타임라인 선 (절대 위치로 현재 아이템의 끝부분까지 이어짐) */}
-                  {i !== handover.tips.length - 1 && (
-                    <div className="absolute top-[30px] bottom-[-4px] left-[5.5px] -translate-x-1/2 w-[2px] bg-[#8FB39A] opacity-50" />
-                  )}
-                  
-                  {/* 타임라인 점 */}
-                  <div className="flex flex-col items-center w-[11px] shrink-0">
-                    <span className="w-[11px] h-[11px] rounded-full bg-[#8FB39A] mt-[19px] shrink-0 relative z-10" />
-                  </div>
-                  
-                  {/* 말풍선 카드 */}
-                  <div className={`rounded-xl py-[13px] px-[15px] text-[15.5px] leading-relaxed mb-3 mt-1 flex-1 shadow-sm ${
-                    t.caution ? "bg-[#F5E3DD] text-[#B5533C] border border-[#B5533C]/25 font-medium" : "bg-white text-[#2B2E28] border border-[#EBE8E0]"
-                  }`}>
-                    {t.text}
-                  </div>
-                </div>
-              ))}
+            <div className="bg-white rounded-xl p-5 shadow-sm border border-[#E7E2D3] flex items-start gap-3">
+              <MessageCircle size={16} className="text-[#89BAB1] mt-0.5 shrink-0" />
+              <p className="text-[15px] text-[#2B2E28] leading-relaxed m-0">
+                {handover.summary.personality || "아직 파악된 성향 정보가 없습니다."}
+              </p>
             </div>
           </section>
+
+          {/* 정서 트리거 */}
+          {handover.summary.emotionalTriggers.length > 0 && (
+            <section>
+              <h2 className="text-[17px] font-bold text-[#2B2E28] mb-3 flex items-center gap-1.5">
+                <span className="w-[5px] h-[5px] bg-[#89BAB1] rounded-full"></span> 정서 트리거
+              </h2>
+              <div className="flex flex-col gap-3">
+                {handover.summary.emotionalTriggers.map((trig, i) => (
+                  <div key={i} className="bg-[#F5E3DD] border border-[#B5533C]/25 rounded-xl p-4">
+                    <div className="flex items-start gap-2 mb-1.5">
+                      <AlertTriangle size={15} className="text-[#B5533C] mt-0.5 shrink-0" />
+                      <div className="text-[14.5px] font-bold text-[#B5533C] leading-snug">{trig.trigger}</div>
+                    </div>
+                    <p className="text-[13.5px] text-[#2B2E28] leading-relaxed mb-2 ml-[23px]">{trig.description}</p>
+                    <div className="flex flex-wrap gap-1.5 ml-[23px]">
+                      {trig.sourceLogIds.map((logId) => (
+                        <span key={logId} className="text-[11px] text-[#89BAB1] bg-white rounded-full px-2 py-0.5 border border-[#DDD8C8]">
+                          근거: {logId}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </section>
+          )}
+
+          {/* 선호·금기 화제 */}
+          {(handover.summary.preferredTopics.length > 0 || handover.summary.avoidTopics.length > 0) && (
+            <section>
+              <h2 className="text-[17px] font-bold text-[#2B2E28] mb-3 flex items-center gap-1.5">
+                <span className="w-[5px] h-[5px] bg-[#89BAB1] rounded-full"></span> 선호·금기 화제
+              </h2>
+              <div className="bg-white rounded-xl p-5 shadow-sm border border-[#E7E2D3] flex flex-col gap-4">
+                {handover.summary.preferredTopics.length > 0 && (
+                  <div className="flex items-start gap-3">
+                    <Heart size={14} className="text-[#89BAB1] mt-1 shrink-0" />
+                    <div className="flex flex-wrap gap-2">
+                      {handover.summary.preferredTopics.map((topic, i) => (
+                        <span key={i} className="text-[13px] text-[#3E7A6B] bg-[#E3EEE7] rounded-full px-3 py-1 border border-[#89BAB1]/25">
+                          {topic}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+                {handover.summary.avoidTopics.length > 0 && (
+                  <div className="flex items-start gap-3">
+                    <Ban size={14} className="text-[#B5533C] mt-1 shrink-0" />
+                    <div className="flex flex-wrap gap-2">
+                      {handover.summary.avoidTopics.map((topic, i) => (
+                        <span key={i} className="text-[13px] text-[#B5533C] bg-[#F5E3DD] rounded-full px-3 py-1 border border-[#B5533C]/25">
+                          {topic}
+                        </span>
+                      ))}
+                    </div>
+                  </div>
+                )}
+              </div>
+            </section>
+          )}
+
+          {/* 최근 3개월 요약 */}
+          {handover.summary.recentThreeMonthSummary && (
+            <section>
+              <h2 className="text-[17px] font-bold text-[#2B2E28] mb-3 flex items-center gap-1.5">
+                <span className="w-[5px] h-[5px] bg-[#89BAB1] rounded-full"></span> 최근 3개월 요약
+              </h2>
+              <div className="bg-white rounded-xl p-5 shadow-sm border border-[#E7E2D3] flex items-start gap-3">
+                <FileClock size={16} className="text-[#89BAB1] mt-0.5 shrink-0" />
+                <p className="text-[15px] text-[#2B2E28] leading-relaxed m-0">{handover.summary.recentThreeMonthSummary}</p>
+              </div>
+            </section>
+          )}
         </div>
       ) : (
         <div className="flex flex-1 items-center justify-center text-[#4A5046] text-[15px]">

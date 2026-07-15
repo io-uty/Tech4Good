@@ -2,10 +2,11 @@ import React, { useState, useEffect } from "react";
 import { HandoverList } from "./HandoverList";
 import { HandoverDetail } from "./HandoverDetail";
 import { LinkedServices } from "./LinkedServices";
+import { VisitLogHistory } from "./VisitLogHistory";
 import { LinkedServiceType } from "../../../shared/types";
 
 export function HandoverPage({ onShare, setHideNav }: { onShare: () => void, setHideNav?: (hide: boolean) => void }) {
-  const [view, setView] = useState<"list" | "detail" | "services">("list");
+  const [view, setView] = useState<"list" | "detail" | "services" | "logs">("list");
   const [selectedElder, setSelectedElder] = useState<{ id: string; name: string } | null>(null);
   const [servicesData, setServicesData] = useState<LinkedServiceType[]>([]);
 
@@ -29,6 +30,10 @@ export function HandoverPage({ onShare, setHideNav }: { onShare: () => void, set
     setView("services");
   };
 
+  const handleShowLogs = () => {
+    setView("logs");
+  };
+
   if (view === "list") {
     return <HandoverList onSelect={handleSelectElder} />;
   }
@@ -40,6 +45,7 @@ export function HandoverPage({ onShare, setHideNav }: { onShare: () => void, set
         elderName={selectedElder.name}
         onBack={() => setView("list")}
         onShowServices={handleShowServices}
+        onShowLogs={handleShowLogs}
         onShare={onShare}
       />
     );
@@ -50,6 +56,16 @@ export function HandoverPage({ onShare, setHideNav }: { onShare: () => void, set
       <LinkedServices
         elderName={selectedElder.name}
         services={servicesData}
+        onBack={() => setView("detail")}
+      />
+    );
+  }
+
+  if (view === "logs" && selectedElder) {
+    return (
+      <VisitLogHistory
+        elderId={selectedElder.id}
+        elderName={selectedElder.name}
         onBack={() => setView("detail")}
       />
     );

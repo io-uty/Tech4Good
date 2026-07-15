@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useRef, useState } from "react";
 import { Activity, Utensils, Smile, Brain, Send, Mic, Square, Clock, Edit2, Bell } from "lucide-react";
 import { ThreadSquiggle } from "../../../shared/ui/ThreadSquiggle";
 import { submitVisitLog, submitStt } from "../../../shared/api";
@@ -6,8 +6,80 @@ import { VisitLogResponse, ResultCardType } from "../../../shared/types";
 import ezBefore from "../../../beforeez.webp";
 import ezSpeaking from "../../../speakingez.webp";
 import ezDone from "../../../doneez.webp";
+import logo from "../../../logo.webp";
 
 type RecordState = "idle" | "recording" | "transcribing" | "textInput" | "summarizing" | "finalSummary";
+
+// Naver Clova STT(단문 인식)는 16kHz mono 16bit PCM WAV를 기대함.
+// 브라우저 MediaRecorder 기본 출력(webm/opus)은 그대로 넘기면 인식이 안 되므로
+// Web Audio API로 원시 PCM을 직접 수집해 WAV로 인코딩한다.
+function mergeBuffers(chunks: Float32Array[]): Float32Array {
+  const length = chunks.reduce((sum, c) => sum + c.length, 0);
+  const result = new Float32Array(length);
+  let offset = 0;
+  for (const chunk of chunks) {
+    result.set(chunk, offset);
+    offset += chunk.length;
+  }
+  return result;
+}
+
+function downsampleBuffer(buffer: Float32Array, inputSampleRate: number, outputSampleRate: number): Float32Array {
+  if (outputSampleRate >= inputSampleRate) return buffer;
+  const ratio = inputSampleRate / outputSampleRate;
+  const newLength = Math.round(buffer.length / ratio);
+  const result = new Float32Array(newLength);
+  let offsetResult = 0;
+  let offsetBuffer = 0;
+  while (offsetResult < newLength) {
+    const nextOffsetBuffer = Math.round((offsetResult + 1) * ratio);
+    let accum = 0;
+    let count = 0;
+    for (let i = offsetBuffer; i < nextOffsetBuffer && i < buffer.length; i++) {
+      accum += buffer[i];
+      count++;
+    }
+    result[offsetResult] = count > 0 ? accum / count : 0;
+    offsetResult++;
+    offsetBuffer = nextOffsetBuffer;
+  }
+  return result;
+}
+
+function encodeWavBlob(chunks: Float32Array[], inputSampleRate: number, outputSampleRate = 16000): Blob {
+  const merged = mergeBuffers(chunks);
+  const downsampled = downsampleBuffer(merged, inputSampleRate, outputSampleRate);
+
+  const pcm = new DataView(new ArrayBuffer(downsampled.length * 2));
+  for (let i = 0, offset = 0; i < downsampled.length; i++, offset += 2) {
+    const s = Math.max(-1, Math.min(1, downsampled[i]));
+    pcm.setInt16(offset, s < 0 ? s * 0x8000 : s * 0x7fff, true);
+  }
+
+  const headerLength = 44;
+  const buffer = new ArrayBuffer(headerLength + pcm.byteLength);
+  const view = new DataView(buffer);
+  const writeString = (offset: number, str: string) => {
+    for (let i = 0; i < str.length; i++) view.setUint8(offset + i, str.charCodeAt(i));
+  };
+
+  writeString(0, "RIFF");
+  view.setUint32(4, 36 + pcm.byteLength, true);
+  writeString(8, "WAVE");
+  writeString(12, "fmt ");
+  view.setUint32(16, 16, true);
+  view.setUint16(20, 1, true); // PCM
+  view.setUint16(22, 1, true); // mono
+  view.setUint32(24, outputSampleRate, true);
+  view.setUint32(28, outputSampleRate * 2, true); // byte rate
+  view.setUint16(32, 2, true); // block align
+  view.setUint16(34, 16, true); // bits per sample
+  writeString(36, "data");
+  view.setUint32(40, pcm.byteLength, true);
+  new Uint8Array(buffer, headerLength).set(new Uint8Array(pcm.buffer));
+
+  return new Blob([buffer], { type: "audio/wav" });
+}
 
 export function VoiceLogPage({ onSubmit }: { onSubmit: () => void }) {
   const [recordState, setRecordState] = useState<RecordState>("idle");
@@ -15,19 +87,53 @@ export function VoiceLogPage({ onSubmit }: { onSubmit: () => void }) {
   const [text, setText] = useState("");
   const [result, setResult] = useState<VisitLogResponse | null>(null);
 
-  const handleStartRecording = () => {
-    setRecordState("recording");
+  const streamRef = useRef<MediaStream | null>(null);
+  const audioContextRef = useRef<AudioContext | null>(null);
+  const sourceRef = useRef<MediaStreamAudioSourceNode | null>(null);
+  const processorRef = useRef<ScriptProcessorNode | null>(null);
+  const chunksRef = useRef<Float32Array[]>([]);
+
+  const handleStartRecording = async () => {
+    try {
+      const stream = await navigator.mediaDevices.getUserMedia({ audio: true });
+      streamRef.current = stream;
+
+      const audioContext = new AudioContext();
+      audioContextRef.current = audioContext;
+
+      const source = audioContext.createMediaStreamSource(stream);
+      sourceRef.current = source;
+
+      const processor = audioContext.createScriptProcessor(4096, 1, 1);
+      processorRef.current = processor;
+      chunksRef.current = [];
+      processor.onaudioprocess = (e) => {
+        chunksRef.current.push(new Float32Array(e.inputBuffer.getChannelData(0)));
+      };
+
+      source.connect(processor);
+      processor.connect(audioContext.destination);
+
+      setRecordState("recording");
+    } catch (e) {
+      console.error("마이크 접근 실패:", e);
+      alert("마이크 권한을 허용해야 녹음할 수 있어요.");
+    }
   };
 
   const handleStopRecording = async () => {
     setRecordState("transcribing");
 
-    // 녹음 후 로딩 페이지 1초 보이게 함
-    await new Promise(resolve => setTimeout(resolve, 1000));
+    const inputSampleRate = audioContextRef.current?.sampleRate ?? 44100;
+    processorRef.current?.disconnect();
+    sourceRef.current?.disconnect();
+    streamRef.current?.getTracks().forEach((t) => t.stop());
+    await audioContextRef.current?.close();
+
+    const wavBlob = encodeWavBlob(chunksRef.current, inputSampleRate);
 
     try {
-      const dummyAudio = new Blob(["dummy audio content"], { type: "audio/wav" });
-      const res = await submitStt(dummyAudio);
+      const res = await submitStt(wavBlob);
       setTranscribedText(res.rawText);
       setRecordState("textInput");
     } catch (e) {
@@ -94,8 +200,10 @@ export function VoiceLogPage({ onSubmit }: { onSubmit: () => void }) {
     <div className="flex-1 overflow-y-auto pb-5 relative flex flex-col w-full h-full bg-[#F7F4EC]">
       {/* Header */}
       <header className="flex justify-between items-center p-5 pt-6 sticky top-0 bg-[#F7F4EC]/90 backdrop-blur-sm z-10 shrink-0">
-
-        <h1 className="text-[25px] font-bold mt-2 mb-1 text-[#2B2E28]">방문 일지</h1>
+        <img src={logo} alt="돌봄EZ" className="h-[22px] w-auto" />
+        <button className="relative p-2 rounded-full hover:bg-black/5 transition-colors text-[#2B2E28]">
+          <Bell size={24} strokeWidth={2.5} />
+        </button>
       </header>
 
       <div className="px-5 mb-6 shrink-0 w-full">

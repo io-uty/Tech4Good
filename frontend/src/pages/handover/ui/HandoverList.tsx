@@ -3,6 +3,7 @@ import { ChevronRight, User, Bell } from "lucide-react";
 import { ThreadSquiggle } from "../../../shared/ui/ThreadSquiggle";
 import { getAssignedElders } from "../../../shared/api";
 import { AssignedElderType } from "../../../shared/types";
+import logo from "../../../logo.webp";
 
 export function HandoverList({ onSelect }: { onSelect: (id: string, name: string) => void }) {
   const [elders, setElders] = useState<AssignedElderType[]>([]);
@@ -26,8 +27,10 @@ export function HandoverList({ onSelect }: { onSelect: (id: string, name: string
     <div className="flex-1 overflow-y-auto pb-6 flex flex-col bg-[#F7F4EC]">
       {/* Header */}
       <header className="flex justify-between items-center p-5 pt-6 sticky top-0 bg-[#F7F4EC]/90 backdrop-blur-sm z-10 shrink-0">
-
-        <h1 className="text-[25px] font-bold mt-2 mb-1 text-[#2B2E28]">인수인계 브리핑</h1>
+        <img src={logo} alt="돌봄EZ" className="h-[22px] w-auto" />
+        <button className="relative p-2 rounded-full hover:bg-black/5 transition-colors text-[#2B2E28]">
+          <Bell size={24} strokeWidth={2.5} />
+        </button>
       </header>
 
       <div className="px-5 mb-6 shrink-0 w-full">

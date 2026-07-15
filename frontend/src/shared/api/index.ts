@@ -68,10 +68,19 @@ export async function submitStt(audioFile: Blob | File): Promise<{ rawText: stri
       method: "POST",
       body: formData,
     });
-    if (!res.ok) throw new Error("Failed to convert speech to text");
-    return await res.json();
+    if (!res.ok) {
+      const errorBody = await res.text().catch(() => "(응답 본문 읽기 실패)");
+      throw new Error(`STT 실패 (status=${res.status}): ${errorBody}`);
+    }
+    const json = await res.json();
+    if (!json.rawText) {
+      // Clova가 200을 줬지만 text가 빈 값인 경우 (침묵 구간 등) — 목업으로 조용히 덮지 않고 그대로 노출
+      console.warn("STT 응답에 rawText가 비어 있음:", json);
+    }
+    return json;
   } catch (e) {
-    console.warn("Mocking STT response:", e);
+    // 실제 원인을 반드시 콘솔에서 확인할 것 (네트워크 에러 / 5xx / Clova 키 문제 등)
+    console.error("STT 호출 실패, 목업으로 대체:", e);
     return {
       rawText: "오늘 김순이 어르신 방문했는데 컨디션은 괜찮으신데 점심을 반 정도밖에 안 드셨고 아드님 얘기 나오니까 말수가 줄었어요"
     };
@@ -105,22 +114,90 @@ export async function submitVisitLog(workerId: string, elderId: string, rawText:
   }
 }
 
+export async function getVisitLogs(elderId: string): Promise<VisitLogResponse[]> {
+  try {
+    const res = await fetch(`${API_BASE}/visit-logs/${elderId}`);
+    if (!res.ok) throw new Error("Failed to fetch visit logs");
+    return await res.json();
+  } catch (e) {
+    console.warn("Mocking VisitLogs response:", e);
+    return [
+      {
+        logId: "log_20260710_001",
+        elderId,
+        workerId: "worker-1",
+        createdAt: "2026-07-10T10:30:00+09:00",
+        body: "특이사항 없음, 컨디션 양호",
+        food: "점심 절반 정도 드심",
+        emotion: "아드님 이야기 나오자 말수 줄어듦",
+        cognition: "대화 흐름 자연스러움",
+        journalEntry: "전반적인 컨디션은 양호하셨으나 점심 식사량이 평소보다 적었다. 아드님 이야기가 나오자 말수가 줄어드는 모습을 보이셨는데, 가족 관련 화제는 조심스럽게 접근할 필요가 있어 보인다."
+      },
+      {
+        logId: "log_20260703_001",
+        elderId,
+        workerId: "worker-1",
+        createdAt: "2026-07-03T11:00:00+09:00",
+        body: "혈압 140/90, 걸음걸이 안정적",
+        food: "죽 반 그릇, 입맛 없음",
+        emotion: "표정 어두움, 말수 줄어듦",
+        cognition: "날짜·요일 정확히 기억",
+        journalEntry: "혈압이 평소보다 다소 높게 측정되어 안정을 권해드렸다. 식사량이 줄어 식욕 저하가 우려되며, 정서적으로도 위축된 모습을 보이셨다."
+      },
+      {
+        logId: "log_20260626_001",
+        elderId,
+        workerId: "worker-1",
+        createdAt: "2026-06-26T09:45:00+09:00",
+        body: "무릎 통증 호소",
+        food: "아침 정상 섭취",
+        emotion: "",
+        cognition: "",
+        journalEntry: "무릎 통증을 호소하셔서 병원 진료를 권해드렸다. 그 외 특이사항은 없었다."
+      }
+    ];
+  }
+}
+
 export async function getHandover(elderId: string): Promise<HandoverResponse> {
   try {
-    const res = await fetch(`${API_BASE}/handover/${elderId}`);
+    const res = await fetch(`${API_BASE}/handover-cards/${elderId}/latest`);
     if (!res.ok) throw new Error("Failed to fetch handover data");
     return await res.json();
   } catch (e) {
     console.warn("Mocking Handover response:", e);
     return {
+      cardId: "card_mock_001",
       elderId: elderId,
-      name: "김순이",
-      careYears: "3년째 돌봄",
-      tips: [
-        { text: "귀가 어두우시니 낮은 톤으로 천천히 말씀해 주세요.", caution: false },
-        { text: "트로트 가수 임영웅 노래를 틀어드리면 마음을 쉽게 여심.", caution: false },
-        { text: "5월에는 사별한 배우자 생각으로 우울증이 깊어지니 정서 지원을 늘려주세요.", caution: true }
-      ]
+      generatedAt: "2026-07-10T09:00:00+09:00",
+      previousWorkerId: null,
+      newWorkerId: "worker-1",
+      sourceLogRange: { fromDate: "2026-05-01", toDate: "2026-07-10", logCount: 6 },
+      sourceLogIds: ["log_20260710_001", "log_20260703_001", "log_20260626_001"],
+      summary: {
+        basicInfo: {
+          livingCondition: "독거, 반지하 1층 거주",
+          familyRelation: "아들 1명 있으나 왕래 거의 없음",
+          chronicConditions: ["고혈압"],
+          medications: ["혈압약(아침 1회)"]
+        },
+        personality: "귀가 어두워 낮은 톤으로 천천히 말씀드려야 하며, 트로트 노래를 틀어드리면 마음을 쉽게 여시는 편이다.",
+        emotionalTriggers: [
+          {
+            trigger: "아드님 이야기가 나오면 말수가 줄어듦",
+            description: "가족 관련 화제는 조심스럽게 접근하고, 화제를 전환할 준비를 해두는 것이 좋다.",
+            sourceLogIds: ["log_20260710_001", "log_20260703_001"]
+          }
+        ],
+        preferredTopics: ["트로트 음악", "옛날 동네 이야기"],
+        avoidTopics: ["아드님/가족 관계 — 말수가 줄고 표정이 어두워짐"],
+        recentThreeMonthSummary: "전반적인 컨디션은 양호하나 식사량이 다소 줄었고, 혈압이 평소보다 높게 측정된 날이 있어 주의가 필요하다."
+      },
+      version: 1,
+      previousVersionId: null,
+      status: "confirmed",
+      confirmedBy: "worker-1",
+      confirmedAt: "2026-07-10T09:00:00+09:00"
     };
   }
 }

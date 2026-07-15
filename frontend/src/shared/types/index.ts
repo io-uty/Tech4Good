@@ -46,11 +46,43 @@ export type VisitLogResponse = {
   journalEntry: string;
 };
 
+export type HandoverBasicInfoType = {
+  livingCondition: string;
+  familyRelation: string;
+  chronicConditions: string[];
+  medications: string[];
+};
+
+export type EmotionalTriggerType = {
+  trigger: string;
+  description: string;
+  sourceLogIds: string[];
+};
+
+export type HandoverSummaryType = {
+  basicInfo: HandoverBasicInfoType;
+  personality: string;
+  emotionalTriggers: EmotionalTriggerType[];
+  preferredTopics: string[];
+  avoidTopics: string[];
+  recentThreeMonthSummary: string;
+};
+
+// 기능3 인수인계 카드 (CLAUDE.md 8.1절) — 백엔드 HandoverCard와 동일한 구조
 export type HandoverResponse = {
+  cardId: string;
   elderId: string;
-  name: string;
-  careYears: string;
-  tips: TipType[];
+  generatedAt: string;
+  previousWorkerId: string | null;
+  newWorkerId: string | null;
+  sourceLogRange: { fromDate: string; toDate: string; logCount: number };
+  sourceLogIds: string[];
+  summary: HandoverSummaryType;
+  version: number;
+  previousVersionId: string | null;
+  status: string;
+  confirmedBy: string | null;
+  confirmedAt: string | null;
 };
 
 export type AssignedElderType = {
