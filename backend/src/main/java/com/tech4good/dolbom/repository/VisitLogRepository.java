@@ -52,4 +52,13 @@ public class VisitLogRepository extends FirestoreSupport {
 	public void save(VisitLog log) {
 		await(db().collection(COLLECTION).document(log.getLogId()).set(toMap(log)));
 	}
+
+	/** logId 접두사(예: "log_20260715_")로 시작하는 문서 수를 센다 — 일자별 순번 채번용 */
+	public int countByLogIdPrefix(String prefix) {
+		var query = db().collection(COLLECTION)
+				.orderBy(com.google.cloud.firestore.FieldPath.documentId())
+				.startAt(prefix)
+				.endAt(prefix + "\uf8ff");
+		return await(query.get()).size();
+	}
 }

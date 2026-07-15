@@ -28,6 +28,19 @@ public class VisitLog {
 	private String confirmedBy;
 	private String confirmedAt;
 
+	// ===== 아래는 신규 API 명세(POST /api/visit-logs, rawText 기반) 산출 필드 =====
+	// rawText 자체는 저장하지 않는다. structuredLog/rawSttText는 기능3(HandoverPrompts) 호환을 위해
+	// 이 필드들로부터 자동 파생되어 함께 채워진다.
+	private String body;
+	private String food;
+	private String emotion;
+	private String cognition;
+	/** Claude가 생성한 방문일지 서술문 */
+	private String journalEntry;
+	/** 3줄 요약 */
+	private List<String> briefSummary;
+	private String createdAt;
+
 	@Data
 	@Builder
 	@NoArgsConstructor
